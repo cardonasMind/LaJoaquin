@@ -965,6 +965,7 @@ export default class extends Component {
     }
 
     componentWillUnmount() {
+        const db = firebase.firestore();
         let unsub = db.collection('users').onSnapshot(() => {});
         
         // Stop listening for changes
@@ -1084,9 +1085,9 @@ export default class extends Component {
                         #personal-section #directivos-slider, 
                         #personal-section #maestros-slider {
                             display: grid;
-                            grid-template-columns: 1fr 1fr 1fr 1fr;
+                            grid-template-columns: repeat(4, min-content);
                             grid-gap: 1rem;
-                            margin 1rem -1rem;
+                            justify-content: space-between;
                         }
     
     

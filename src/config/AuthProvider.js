@@ -84,7 +84,9 @@ export class AuthContextProvider extends Component {
             } else {
                 // If user isn´t in the DB, add it XD
                 db.collection("users").doc(uid).set({
-                    accountType: "normal"
+                    accountType: "normal",
+                    displayName: this.state.displayName,
+                    photoURL: this.state.photoURL
                 })
                 .then(() => {
                     console.log("User is now in the DB :o");
