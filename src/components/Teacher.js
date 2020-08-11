@@ -2,16 +2,16 @@ import React from "react";
 
 import Avatar from "./craft/Avatar";
 
-const Teacher = () => {
+const Teacher = ({ subject, displayName, photoURL, background }) => {
     return(
         <div className="teacherContainer">
             <div className="teacherDataOverlay">
                 <div className="teacherData">
-                    <div className="teacherSubject">Matemáticas</div>
+                    <div className="teacherSubject">{subject}</div>
                     <Avatar
                         hasContainer
-                        displayName={"Doña Deisy"}
-                        photoURL={"images/member/default.jpg"}
+                        displayName={displayName}
+                        photoURL={photoURL}
                     />
                 </div>
             </div>
@@ -25,8 +25,15 @@ const Teacher = () => {
                     box-shadow: 0 0 6px 0px;
                     border-radius: 1.4rem;
                     position: relative;
-                    background-image: url("/images/member/background.jpg");
+                    background-image: url(${background ? background : "images/member/background.jpg"});
+                    background-size: cover;
+                    background-repeat: no-repeat;
                     overflow: hidden;
+                    transition: 1s;
+                }
+
+                .teacherContainer:hover {
+                    
                 }
 
                 .teacherDataOverlay {
@@ -35,7 +42,7 @@ const Teacher = () => {
                     right: 0;
                     bottom: 0;
                     left: 0;
-                    background: linear-gradient(black, #3a3000d9);
+                    background: rgba(0, 0, 0, .4);
                     color: white;
                     display: flex;
                     justify-content: center;

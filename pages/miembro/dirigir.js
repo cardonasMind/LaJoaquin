@@ -651,7 +651,7 @@ const PersonalAvatar = ({ showTheDiv, UID, displayName, accountType, photoURL })
 
             <style jsx>{`
                 .personalAvatar {
-                    margin: 1rem;
+                    padding: 1rem;
                 }
             
             `}</style>
@@ -794,7 +794,7 @@ class NewPersonalForm extends Component {
                     <div id="search-personal-results">
                         <TheDivController>
                             {personalSearchResults.length === 0 ? null 
-                            : personalSearchResults.map((user, index) => <PersonalAvatar UID={personalSearchResultsKeys[index]} {...user} />)}
+                            : personalSearchResults.map((user, index) => <PersonalAvatar key={personalSearchResultsKeys[index]} UID={personalSearchResultsKeys[index]} {...user} />)}
                         </TheDivController>
                     </div>
                 </div>
@@ -888,35 +888,25 @@ export default class extends Component {
         const directivos = db.collection("users").where("accountType", "==", "directivo");
         const profesores = db.collection("users").where("accountType", "==", "profesor");
 
-        /*directivos.onSnapshot(querySnapshot => {
-            querySnapshot.forEach(directivo => {
-                this.setState(prevState => ({ 
-                    directivos: [...prevState.directivos, directivo.data()],
-                    directivosKeys: [...prevState.directivosKeys, directivo.id]
-                }))
-            });
-        }, error => {
-            Notification["error"]({
-                title: "Ocurrió un error :(",
-                description: error.message
-            });
-        });*/
-
         directivos.onSnapshot(querySnapshot => {
             let directivos = [...this.state.directivos];
             let directivosKeys = [...this.state.directivosKeys];
             
             querySnapshot.docChanges().forEach(change => {
-                if (change.type === 'added') {
-                    directivos.push(change.doc.data());
-                    directivosKeys.push(change.doc.id);
+                const { doc, type } = change;
+
+                const index = directivosKeys.indexOf(doc.id);
+
+                if (type === 'added') {
+                    directivos.push(doc.data());
+                    directivosKeys.push(doc.id);
                 }
-                if (change.type === 'modified') {
+                if (type === 'modified') {
 
                 }
-                if (change.type === 'removed') {
-                    directivos.splice(change.oldIndex, 1);
-                    directivosKeys.splice(change.oldIndex, 1);
+                if (type === 'removed') {
+                    directivos.splice(index, 1);
+                    directivosKeys.splice(index, 1);
                 }
             });
 
@@ -925,37 +915,25 @@ export default class extends Component {
 
 
 
-
-        /*profesores.onSnapshot(querySnapshot => {
-            querySnapshot.forEach(profesor => {
-                this.setState(prevState => ({ 
-                    profesores: [...prevState.profesores, profesor.data()],
-                    profesoresKeys: [...prevState.profesoresKeys, profesor.id]
-                }))
-            });
-        }, error => {
-            Notification["error"]({
-                title: "Ocurrió un error :(",
-                description: error.message
-            });
-        });*/
-
-
         profesores.onSnapshot(querySnapshot => {
             let profesores = [...this.state.profesores];
             let profesoresKeys = [...this.state.profesoresKeys];
 
             querySnapshot.docChanges().forEach(change => {
-                if (change.type === 'added') {
-                    profesores.push(change.doc.data());
-                    profesoresKeys.push(change.doc.id);
+                const { doc, type } = change;
+
+                const index = profesoresKeys.indexOf(doc.id);
+
+                if (type === 'added') {
+                    profesores.push(doc.data());
+                    profesoresKeys.push(doc.id);
                 }
-                if (change.type === 'modified') {
+                if (type === 'modified') {
 
                 }
-                if (change.type === 'removed') {
-                    profesores.splice(change.oldIndex, 1);
-                    profesoresKeys.splice(change.oldIndex, 1);
+                if (type === 'removed') {
+                    profesores.splice(index, 1);
+                    profesoresKeys.splice(index, 1);
                 }
             });
 
@@ -1069,6 +1047,7 @@ export default class extends Component {
                             background: white;
                             padding: .4rem 1rem;
                             z-index: 998;
+                            box-shadow: 0px 0px 6px 0px;
                         }
     
     
@@ -1085,9 +1064,19 @@ export default class extends Component {
                         #personal-section #directivos-slider, 
                         #personal-section #maestros-slider {
                             display: grid;
-                            grid-template-columns: repeat(4, min-content);
+                            grid-template-columns: repeat(4, 1fr);
                             grid-gap: 1rem;
-                            justify-content: space-between;
+                            margin: 1rem -1rem;
+                        }
+
+                        #personal-section #directivos-slider .personalAvatar:nth-child(odd), 
+                        #personal-section #maestros-slider .personalAvatar:nth-child(odd) {
+                            background: #f0f0f0;
+                        }
+
+                        #personal-section #directivos-slider .personalAvatar:hover, 
+                        #personal-section #maestros-slider .personalAvatar:hover {
+                            background: beige;
                         }
     
     
