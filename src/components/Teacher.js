@@ -33,7 +33,7 @@ const Teacher = ({ subject, displayName, photoURL, background }) => {
                 }
 
                 .teacherContainer:hover {
-                    
+                    transform: scale3d(.9, .9, .9);
                 }
 
                 .teacherDataOverlay {

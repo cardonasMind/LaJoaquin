@@ -132,6 +132,7 @@ export class AuthContextProvider extends Component {
 
             } else {
                 // User isn´t logged
+                this.setState(this.baseState);
             }
         });
     }

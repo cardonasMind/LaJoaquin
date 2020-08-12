@@ -131,18 +131,18 @@ export default class extends Component {
 
         return(
             <div className="postContainer" key={key} /*ref={this.postContainer}*/ id={author+"-"+authorImage} >
-                <p className="postDate">{date}</p>
+                <p className="postDate">{date ? date : "Fecha de publicación"}</p>
                 {this.props.postImage 
                 ? <div className="postImage">
-                    <div className="postImageOverlay"><h3>{title}</h3></div>
+                    <div className="postImageOverlay"><h3>{title ? title : "Título de la publicación"}</h3></div>
                 </div> 
                 : <div className="postColor">
-                    <h2>{title}</h2>
+                    <h2>{title ? title : "Título de la publicación"}</h2>
                 </div>}
                 
                 <div className="postDescription">
                     <p className="postReadMore" onClick={this.handleTheDiv}>- Click aquí para ver el artículo -</p>
-                    <p>{description}</p>
+                    <p>{description ? description : "Descripción de la publicación"}</p>
                 </div>
     
                 <style jsx>{`
@@ -171,7 +171,7 @@ export default class extends Component {
                     }
 
                     .postContainer .postColor {
-                        background: ${postColor};
+                        background: ${postColor ? postColor : "linear-gradient(45deg, #3fe434, #5f70b5)"};
                         width: 100%;
                         height: 200px;
                         display: flex;
@@ -182,7 +182,7 @@ export default class extends Component {
 
                     .postContainer .postColor h2 {
                         max-width: 90%;
-                        color: ${titleColor};
+                        color: ${titleColor ? titleColor : "#f0f0f0"};
                     }
     
                     .postContainer .postImage .postImageOverlay {

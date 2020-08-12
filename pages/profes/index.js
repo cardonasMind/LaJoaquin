@@ -2,15 +2,17 @@ import { Component, Fragment } from "react";
 
 import Head from "next/head";
 import Link from "next/link";
+import Router from "next/router";
 
 import firebase from "../../src/config/firebase";
 
 import { AuthContext } from "../../src/config/AuthProvider";
 
+import Header from "../../src/components/Header";
 import MessageModal from "../../src/components/MessageModal";
 import Teacher from "../../src/components/Teacher";
-
 import Navigation from "../../src/components/Navigation";
+import { Loader } from "rsuite";
 
 export default class extends Component {
     static contextType = AuthContext;
@@ -25,33 +27,27 @@ export default class extends Component {
         }
     }
 
-    componentDidMount() {
-        /*const db = firebase.firestore();
-
-        db.collection('users').where('accountType', '==', 'profesor')
-        .where('teacherData.grades.10', '==', true)
-        
-        .get().then(querySnapshot => {
-            querySnapshot.forEach(teacher => {
-                this.setState(prevState => ({ profes: [...prevState.profes, teacher.data()]}))
-            })
-        })*/
-    }
-
-    handleSelectedGrade = e => {
-        this.setState({ selectedGrade: e.target.value });
-
+    getTeachersFromDB = grade => {
         const db = firebase.firestore();
 
         db.collection('users').where('accountType', '==', 'profesor')
-        .where(`teacherData.grades.${this.state.selectedGrade}`, '==', true)
-        
+        .where(`teacherData.grades.${grade}`, '==', true)
         .get().then(querySnapshot => {
             querySnapshot.forEach(teacher => {
-                console.log(teacher.data())
+                this.setState(prevState => ({ 
+                    teachers: [...prevState.teachers, teacher.data()],
+                    teachersKeys: [...prevState.teachersKeys, teacher.id]
+                }))
             })
         })
     }
+
+    componentDidMount() {
+        // When the page loads get teachers from 11´s grade
+        this.getTeachersFromDB("11");
+    }
+
+    handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
     render() {
         const { logged } = this.context;
@@ -65,12 +61,14 @@ export default class extends Component {
 
                 {logged ? null : <MessageModal notLogged />}
 
+                <Header />
+
                 <div id="principal-section">
                     <h1>Selecciona un grado</h1>
 
                     <h2>
                         Profes de 
-                        <select value={selectedGrade} onChange={this.handleSelectedGrade}>
+                        <select name="selectedGrade" value={selectedGrade} onChange={this.handleChange}>
                             <option value="11">11</option>
                             <option value="10">10</option>
                             <option value="9">9</option>
@@ -83,23 +81,33 @@ export default class extends Component {
 
                 <div id="teachers-container">
                     <div id="teachers-slider">
-                    {/*
-                        this.state.profes.length > 0
-                    ? this.state.profes.map(teacher => 
-                        <Link href={`/profes/${teacher.displayName}`}>
-                            <a>
-                                <Teacher 
-                                    subject={teacher.teacherData.subject} 
-                                    displayName={teacher.displayName}
-                                    photoURL={teacher.photoURL}
-                                    background={teacher.teacherData.background}
-                                />
-                            </a>
-                        </Link>
-                        
-                        )
-                        : null
-                    */}
+                        {
+                            teachers.length === 0
+                            ? 
+                                <Fragment>
+                                    <Teacher 
+                                        subject="Cargando..." 
+                                        displayName="Cargando..."
+                                    />
+                                    <Teacher 
+                                        subject="Cargando..." 
+                                        displayName="Cargando..."
+                                    />
+                                </Fragment>
+                            : 
+                                teachers.map((teacher, index) => 
+                                    <Link key={teachersKeys[index]} href={`/profes/${teacher.displayName}/${selectedGrade}/`}>
+                                        <a>
+                                            <Teacher
+                                                subject={teacher.teacherData.subject} 
+                                                displayName={teacher.displayName}
+                                                photoURL={teacher.photoURL}
+                                                background={teacher.teacherData.background}
+                                            />
+                                        </a>
+                                    </Link>
+                                )
+                        }
                     </div>
                 </div>
 
@@ -118,13 +126,17 @@ export default class extends Component {
                         color: white;
                     }
 
+                    #principal-section h1 {
+                        font-weight: bold;
+                    }
+
                     #principal-section h2 {
                         color: gold;
                     }
 
                     #principal-section select {
                         border: 2px solid;
-                        background: transparent;
+                        background: rgba(0, 0, 0, .6);
                         padding: 0 .2rem;
                         margin-left: .4rem;
                     }
@@ -143,10 +155,12 @@ export default class extends Component {
                     #teachers-slider {
                         display: inline-flex;
                     }
-                
+                    
+                    #teachers-slider a {
+                        color: inherit;
+                    }
                 `}</style>
             </Fragment>
-        )
-        
+        )   
     }
 }

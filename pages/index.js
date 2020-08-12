@@ -11,9 +11,7 @@ import WelcomePage from "../src/screens/welcome";
 import BasicData from "../src/screens/auth/BasicData";
 
 import Header from "../src/components/Header";
-
 import FirstLogin from "../src/screens/welcome/FirstLogin";
-
 import TheDivController from "../src/components/TheDivController";
 import Post from "../src/components/Post";
 import Navigation from "../src/components/Navigation";
@@ -29,7 +27,7 @@ export default class extends Component {
     componentDidMount() {
         const db = firebase.firestore();
 
-        /*                  GETTING THE PRINCIPALPOSTS FROM DB             */
+        /*                  GETTING THE PRINCIPALPOSTS FROM DB                  */
         db.collection('principalPosts').orderBy("timestamp", "desc").get().then(querySnapshot => {
             querySnapshot.forEach(post => {
                 this.setState(prevState => ({ 
