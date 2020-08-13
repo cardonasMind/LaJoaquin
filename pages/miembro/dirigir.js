@@ -466,7 +466,7 @@ const HeaderNavigation = ({ active, onSelect, ...props }) => {
 
 class HeaderNavigationComponent extends Component {
     state = {
-        active: ""
+        active: "post"
     }
 
     handleSelect = active => this.setState({ active })
@@ -952,13 +952,13 @@ export default class extends Component {
 
     render() {
         const { logged, isAnonymous, displayName, photoURL, accountType, handleLogout } = this.context;
-
-        if(isAnonymous) {
+	
+		if(isAnonymous) {
             Router.push("/miembro");
             return null
         }
-
-        if(accountType === "") {
+		
+		if(accountType === "") {
             return(
                 <Fragment>
                     <Head>
@@ -971,15 +971,9 @@ export default class extends Component {
                 </Fragment>
             )
         }
-
-        if(accountType === "normal") {
-            Router.push("/miembro");
-            return null
-        } else if(accountType === "profesor") {
-            Router.push("/miembro/educar");
-            return null
-        } else {
-            const { directivos, directivosKeys, profesores, profesoresKeys } = this.state;
+		
+		if(accountType === "directivo") {
+			const { directivos, directivosKeys, profesores, profesoresKeys } = this.state;
 
             return(
                 <Fragment>
@@ -1088,6 +1082,12 @@ export default class extends Component {
                     `}</style>
                 </Fragment>
             )
-        }
+		} else if(accountType === "profesor") {
+			Router.push("/miembro/educar");
+            return null
+		} else {
+			Router.push("/miembro");
+            return null
+		}
     }
 }

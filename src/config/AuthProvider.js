@@ -25,7 +25,9 @@ export class AuthContextProvider extends Component {
                 
             handleLogout: this.handleLogout,
             handleGoogleAuth: this.handleGoogleAuth,
-            disableFirstLogin: this.disableFirstLogin
+            disableFirstLogin: this.disableFirstLogin,
+			
+			updateUserAcoountFromDB: this.updateUserAcoountFromDB
         }
 
         this.baseState = this.state;
@@ -70,7 +72,7 @@ export class AuthContextProvider extends Component {
     disableFirstLogin = () => this.setState({ firstLogin: false });
 
 
-    userAccountFromDb = uid => {
+    userAccountFromDB = uid => {
         const db = firebase.firestore();
         const userInDbRef = db.collection("users").doc(uid);
 
@@ -89,6 +91,7 @@ export class AuthContextProvider extends Component {
                     photoURL: this.state.photoURL
                 })
                 .then(() => {
+					this.setState({ accountType: "normal" });
                     console.log("User is now in the DB :o");
                 })
                 .catch(error => {
@@ -108,6 +111,19 @@ export class AuthContextProvider extends Component {
             });
         });
     }
+	
+	updateUserAcoountFromDB = uid => {
+		db.collection("users").doc(uid).update({
+			displayName: this.state.displayName,
+            photoURL: this.state.photoURL
+		})
+        .catch(error => {
+			Notification["error"]({
+				title: "Ocurrió un error :(",
+                description: error.message
+			});
+		});
+	}
 
 
     componentDidMount() {
@@ -127,7 +143,7 @@ export class AuthContextProvider extends Component {
                     this.setState({ logged: true, displayName, email, photoURL });
 
                     // Load some data from db like accountType
-                    this.userAccountFromDb(uid);
+                    this.userAccountFromDB(uid);
                 }
 
             } else {

@@ -112,41 +112,64 @@ const SecondStage = ({ setThirdStage }) => {
                 description: "Elige un nombre valido."
             });
         } else {
-            Notification["info"]({
-                title: "Espera",
-                description: "Procesando imágen..."
-            });
+			const currentUser = firebase.auth().currentUser;
+			
+			if(photoImage === "/images/member/default.jpg") {
+				currentUser.updateProfile({
+					displayName: memberName,
+					photoURL: "/images/member/default.jpg"
+				})
+				.then(() => {
+					Notification["success"]({
+						title: "¡Perfecto!",
+						description: "Todo correcto"
+					});
 
-            const currentUser = firebase.auth().currentUser;
+					setThirdStage();
+				})
+				.catch(error => {
+					Notification["error"]({
+						title: "Ocurrió un error :(",
+						description: error.message
+					});
+				});
+		
+			} else {
+				// Member has upload a image 
+				Notification["info"]({
+					title: "Espera",
+					description: "Procesando imágen..."
+				});
 
-            // Upload the selected photoImage to firebase storage
-            const storageRef = firebase.storage().ref();
-            const uploadPhotoImage = storageRef.child(`usersImages/${currentUser.uid}`)
-                .putString(photoImage, 'data_url');
+				// Upload the selected photoImage to firebase storage
+				const storageRef = firebase.storage().ref();
+				const uploadPhotoImage = storageRef.child(`usersImages/${currentUser.uid}`)
+					.putString(photoImage, 'data_url');
 
-            uploadPhotoImage.then(snapshot => {
-                snapshot.ref.getDownloadURL().then(downloadURL => {
+				uploadPhotoImage.then(snapshot => {
+					snapshot.ref.getDownloadURL().then(downloadURL => {
 
-                    currentUser.updateProfile({
-                        displayName: memberName,
-                        photoURL: downloadURL
-                    })
-                    .then(() => {
-                        Notification["success"]({
-                            title: "¡Perfecto!",
-                            description: "Todo correcto"
-                        });
+						currentUser.updateProfile({
+							displayName: memberName,
+							photoURL: downloadURL
+						})
+						.then(() => {
+							Notification["success"]({
+								title: "¡Perfecto!",
+								description: "Todo correcto"
+							});
 
-                        setThirdStage();
-                    })
-                    .catch(error => {
-                        Notification["error"]({
-                            title: "Ocurrió un error :(",
-                            description: error.message
-                        });
-                    });
-                });
-            });
+							setThirdStage();
+						})
+						.catch(error => {
+							Notification["error"]({
+								title: "Ocurrió un error :(",
+								description: error.message
+							});
+						});
+					});
+				});
+			}
         }
     }
 

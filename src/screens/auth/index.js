@@ -147,7 +147,6 @@ export default class extends Component {
                         background-image: url("/images/member/background.jpg");
                         background-size: cover;
                         background-position: right;
-                        
                     }
 
 

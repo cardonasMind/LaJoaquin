@@ -73,7 +73,11 @@ const ModifyProfileForm = ({ displayName, photoURL }) => {
      }
 
     const handleModifyProfile = () => {
-        let newPhoto = false;
+		const currentUser = firebase.auth().currentUser;
+		
+		currentUser.uid
+		
+        /*let newPhoto = false;
         let newName = false;
 
         // Check if user has change something
@@ -184,7 +188,7 @@ const ModifyProfileForm = ({ displayName, photoURL }) => {
                 title: "Espera",
                 description: "No has modificado tu información aún."
             });
-        }
+        }*/
     }
 
     return(

@@ -104,7 +104,7 @@ export default class extends Component {
                     </div>                       
                     
                     <div id="developed-by">
-                        <p>Para reportar un error envia un WhatsApp a 3216328834</p>
+                        <p>Para reportar un error envia un WhatsApp a <a href="https://wa.me/573216328834">3216328834</a></p>
                         <small>Desarollado por Diego Cardona, estudiante de 11°1 2020</small>
                     </div>
                     
