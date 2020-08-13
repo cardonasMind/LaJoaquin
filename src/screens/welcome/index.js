@@ -104,6 +104,7 @@ export default class extends Component {
                     </div>                       
                     
                     <div id="developed-by">
+                        <p>Para reportar un error envia un WhatsApp a 3216328834</p>
                         <small>Desarollado por Diego Cardona, estudiante de 11°1 2020</small>
                     </div>
                     
@@ -137,6 +138,11 @@ export default class extends Component {
 
                         #about-us-section #about-us-image #go-page-button {
                             transform: translateY(-1.6rem);
+                        }
+
+
+                        #developed-by {
+                            text-align: center;
                         }
                     
                         
