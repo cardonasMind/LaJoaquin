@@ -9,7 +9,7 @@ import { AuthContext } from "../../../src/config/AuthProvider";
 
 import Header from "../../../src/components/Header";
 import MessageModal from "../../../src/components/MessageModal";
-import { Loader, Nav } from "rsuite";
+import { Loader, Nav, Icon } from "rsuite";
 import Avatar from "../../../src/components/craft/Avatar";
 import Post from "../../../src/components/Post";
 
@@ -20,17 +20,18 @@ const GradesNavigation = ({ active, onSelect, ...props }) => {
     return (
         <Nav {...props} activeKey={active} onSelect={onSelect} >
             <Nav.Item eventKey="general">General</Nav.Item>
-            <Nav.Item eventKey="uno">1</Nav.Item>
-            <Nav.Item eventKey="dos">2</Nav.Item>
-            <Nav.Item eventKey="tres">11°3</Nav.Item>
-            <Nav.Item eventKey="cuatro">11°4</Nav.Item>
+            <Nav.Item eventKey="first">11°1</Nav.Item>
+            <Nav.Item eventKey="second">11°2</Nav.Item>
+            <Nav.Item eventKey="third">11°3</Nav.Item>
+            <Nav.Item eventKey="fourth">11°4</Nav.Item>
+            <Nav.Item eventKey="fifth">11°5</Nav.Item>
         </Nav>
     );
 };
 
 class GradesNavigationComponent extends Component {
     state = {
-        active: ""
+        active: "general"
     }
 
     handleSelect = active => this.setState({ active })
@@ -123,6 +124,12 @@ export default class extends Component {
                     </div>
                 </div>
 
+                <div id="exit-teacher-navigation">
+                    <Link href="/profes">
+                        <a><Icon icon="flag-checkered" /> Volver al área de profes</a>
+                    </Link>
+                </div>
+
 
 
                 <style jsx global>{`
@@ -130,10 +137,11 @@ export default class extends Component {
                         background: url(${teacher.teacherData ? teacher.teacherData.background : "/images/member/background.jpg"});
                         background-size: cover;
                         background-repeat: no-repeat;
-                        padding: 2rem 0;
                     }
 
                     #header-section-overlay {
+                        background: linear-gradient(rgba(0, 0, 0, .4), #efc70585);
+                        padding: 2rem 0;                    
                         color: white;
                     }
 
@@ -145,13 +153,6 @@ export default class extends Component {
                     }
 
                     #principal-section-header {
-                        padding: 1rem;
-
-                        position: sticky;
-                        top: 0;
-                        background: white;
-                        right: 0;
-                        left: 0;
                     }
 
                     #principal-section-header #teacher-subject {
@@ -163,8 +164,19 @@ export default class extends Component {
                         border-radius: 0 0 .4rem .4rem;
                     }
 
+                    #principal-section-header #teacher-grades-buttons {
+                       overflow-x: auto;
+                    }
+
                 
-                
+                    #exit-teacher-navigation {
+                        position: fixed;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        background: white;
+                        padding: .4rem 1rem;
+                    }
                 `}</style>
             </Fragment>
         )

@@ -2,7 +2,6 @@ import { Component, Fragment } from "react";
 
 import Head from "next/head";
 import Link from "next/link";
-import Router from "next/router";
 
 import firebase from "../../src/config/firebase";
 
@@ -28,6 +27,8 @@ export default class extends Component {
     }
 
     getTeachersFromDB = grade => {
+        this.setState({ teachers: [], teachersKeys: []})
+
         const db = firebase.firestore();
 
         db.collection('users').where('accountType', '==', 'profesor')
@@ -47,7 +48,15 @@ export default class extends Component {
         this.getTeachersFromDB("11");
     }
 
-    handleChange = e => this.setState({ [e.target.name]: e.target.value });
+    handleChange = e => {
+        // Change selected grade on state
+        this.setState({ [e.target.name]: e.target.value });
+
+        // Request teachers from the selected grade from DB
+        this.getTeachersFromDB(e.target.value);
+    }
+
+
 
     render() {
         const { logged } = this.context;
@@ -87,16 +96,16 @@ export default class extends Component {
                                 <Fragment>
                                     <Teacher 
                                         subject="Cargando..." 
-                                        displayName="Cargando..."
+                                        displayName="Cargando..." 
                                     />
                                     <Teacher 
                                         subject="Cargando..." 
-                                        displayName="Cargando..."
+                                        displayName="Cargando..." 
                                     />
                                 </Fragment>
                             : 
                                 teachers.map((teacher, index) => 
-                                    <Link key={teachersKeys[index]} href={`/profes/${teacher.displayName}/${selectedGrade}/`}>
+                                    <Link key={teachersKeys[index]} href={`/profes/${teacher.displayName}/${selectedGrade}/0`}>
                                         <a>
                                             <Teacher
                                                 subject={teacher.teacherData.subject} 
