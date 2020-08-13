@@ -17,31 +17,47 @@ import Post from "../../../src/components/Post";
 
 
 
-const GradesNavigation = ({ active, onSelect, ...props }) => {
+const GradesNavigation = ({ teacherName, selectedGrade, selectedGroup, ...props }) => {
     return (
-        <Nav {...props} activeKey={active} onSelect={onSelect} >
-            <Nav.Item eventKey="general">General</Nav.Item>
-            <Nav.Item eventKey="first">11°1</Nav.Item>
-            <Nav.Item eventKey="second">11°2</Nav.Item>
-            <Nav.Item eventKey="third">11°3</Nav.Item>
-            <Nav.Item eventKey="fourth">11°4</Nav.Item>
-            <Nav.Item eventKey="fifth">11°5</Nav.Item>
+        <Nav {...props} activeKey={selectedGroup} >
+            <Nav.Item eventKey="0">
+                <Link href={`/profes/${teacherName}/${selectedGrade}/0`}>
+                    <p>General</p>
+                </Link>
+            </Nav.Item>
+            <Nav.Item eventKey="1">
+                <Link href={`/profes/${teacherName}/${selectedGrade}/1`}>
+                    <p>{selectedGrade}°1</p>
+                </Link>
+            </Nav.Item>
+            <Nav.Item eventKey="2">
+                <Link href={`/profes/${teacherName}/${selectedGrade}/2`}>
+                    <p>{selectedGrade}°2</p>
+                </Link>
+            </Nav.Item>
+            <Nav.Item eventKey="3">
+                <Link href={`/profes/${teacherName}/${selectedGrade}/3`}>
+                    <p>{selectedGrade}°3</p>
+                </Link>
+            </Nav.Item>
+            <Nav.Item eventKey="4">
+                <Link href={`/profes/${teacherName}/${selectedGrade}/4`}>
+                    <p>{selectedGrade}°4</p>
+                </Link>
+            </Nav.Item>
+            <Nav.Item eventKey="5">
+                <Link href={`/profes/${teacherName}/${selectedGrade}/5`}>
+                    <p>{selectedGrade}°5</p>
+                </Link>
+            </Nav.Item>
         </Nav>
     );
 };
 
 class GradesNavigationComponent extends Component {
-    state = {
-        active: "general"
-    }
-
-    handleSelect = active => this.setState({ active })
-
     render() {
-        const { active } = this.state;
-
         return (
-            <GradesNavigation appearance="tabs" active={active} onSelect={this.handleSelect} />
+            <GradesNavigation appearance="tabs" {...this.props} />
         );
     }
 }
@@ -61,7 +77,6 @@ export default class extends Component {
         super();
 
         this.state = {
-            teacherName: "",
             selectedGrade: "",
             selectedGroup: "",
             teacher: {},
@@ -73,10 +88,12 @@ export default class extends Component {
     }
 	
 	getTeacherPosts = () => {
-		const { teacherUID } = this.state;
+		const { selectedGrade, selectedGroup, teacherUID } = this.state;
 		const db = firebase.firestore();
 		
-		db.doc(`users/${teacherUID}`).collection("teacherPosts")
+        db.doc(`users/${teacherUID}`).collection("teacherPosts")
+        .where("grade", "==", selectedGrade)
+        .where("group", "==", selectedGroup)
 		.get().then(querySnapshot => {
             querySnapshot.forEach(teacherPost => {
                 this.setState(prevState => ({ 
@@ -108,18 +125,18 @@ export default class extends Component {
             })
         })
 
-        this.setState({ teacherName, selectedGrade, selectedGroup})	
+        this.setState({ selectedGrade, selectedGroup})	
     }
 
     render() {
         const { logged } = this.context;
-        const { teacherName, teacher, selectedGrade, teacherPosts, teacherPostsKeys } = this.state;
+        const { selectedGrade, selectedGroup, teacher, teacherPosts, teacherPostsKeys } = this.state;
 		const { displayName, photoURL, teacherData } = teacher;
 		
         return(
             <Fragment>
                 <Head>
-                    <title>Profe: {teacherName} | Institución Educativa Joaquín Cárdenas Gómez</title>
+                    <title>Profe: {displayName} | Institución Educativa Joaquín Cárdenas Gómez</title>
                 </Head>
 
                 {logged ? null : <MessageModal notLogged />}
@@ -130,7 +147,7 @@ export default class extends Component {
                     <div id="header-section-overlay">
                         <Avatar 
                             hasContainer
-                            displayName={teacherName}
+                            displayName={displayName ? displayName : "Cargando..."}
 							photoURL={photoURL}
                         />
                     </div>
@@ -140,7 +157,11 @@ export default class extends Component {
                     <div id="principal-section-header">
                         <div id="teacher-subject">{teacherData ? teacherData.subject : "Cargando..."}</div>
                         <div id="teacher-grades-buttons">
-                            <GradesNavigationComponent />
+                            <GradesNavigationComponent 
+                                teacherName={displayName} 
+                                selectedGrade={selectedGrade} 
+                                selectedGroup={selectedGroup}
+                            />
                         </div>
                     </div>
 
@@ -155,7 +176,7 @@ export default class extends Component {
 										teacherPosts.map((post, index) => 
 											<Post
 												key={teacherPostsKeys[index]}
-												author={teacherName}
+												author={displayName}
 												authorImage={photoURL}
 												date={post.date}
 												postImage={post.postImage}
@@ -192,9 +213,9 @@ export default class extends Component {
                     }
 
 
-                    #principal-section {
-                        background: white;
+                    #principal-section-header {
                         border-radius: 1.4rem 1.4rem 0 0;
+                        background: white;
                         transform: translateY(-1rem);
                     }
 
@@ -209,6 +230,11 @@ export default class extends Component {
 
                     #principal-section-header #teacher-grades-buttons {
                        overflow-x: auto;
+                    }
+
+                    #teacher-posts-container {
+                        position: relative;
+                        min-height: 40vh;
                     }
 
                 

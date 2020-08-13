@@ -989,6 +989,8 @@ export default class extends Component {
                         <TheDivController>
                             <NewPost />
                         </TheDivController>
+
+                        <Button appearance="subtle" size="sm" onClick={handleLogout}>Cerrar sesión</Button>
                     </div>
     
                     <header>
