@@ -11,6 +11,7 @@ import Header from "../../../src/components/Header";
 import MessageModal from "../../../src/components/MessageModal";
 import { Loader, Nav, Icon } from "rsuite";
 import Avatar from "../../../src/components/craft/Avatar";
+import TheDivController from "../../../src/components/TheDivController";
 import Post from "../../../src/components/Post";
 
 
@@ -63,9 +64,28 @@ export default class extends Component {
             teacherName: "",
             selectedGrade: "",
             selectedGroup: "",
-            teacher: {}
+            teacher: {},
+			teacherUID: "",
+			
+			teacherPosts: [],
+			teacherPostsKeys: []
         }
     }
+	
+	getTeacherPosts = () => {
+		const { teacherUID } = this.state;
+		const db = firebase.firestore();
+		
+		db.doc(`users/${teacherUID}`).collection("teacherPosts")
+		.get().then(querySnapshot => {
+            querySnapshot.forEach(teacherPost => {
+                this.setState(prevState => ({ 
+                    teacherPosts: [...prevState.teacherPosts, teacherPost.data()],
+                    teacherPostsKeys: [...prevState.teacherPostsKeys, teacherPost.id]
+                }))
+            })
+        })
+	}
 
     componentDidMount() {
         const { teacher } = this.props.actualURL;
@@ -75,21 +95,27 @@ export default class extends Component {
 
         const db = firebase.firestore();
 
+		// Getting the info of the teacher
         db.collection('users').where('accountType', '==', 'profesor')
         .where("displayName", '==', teacherName)
         .get().then(querySnapshot => {
             querySnapshot.forEach(teacher => {
-                this.setState({ teacher: teacher.data() })
+                this.setState({ teacher: teacher.data(), teacherUID: teacher.id })
+				
+				
+				// Getting the posts of the teacher to actually actualGrade and actualGroup
+				this.getTeacherPosts()
             })
         })
 
-        this.setState({ teacherName, selectedGrade, selectedGroup})
+        this.setState({ teacherName, selectedGrade, selectedGroup})	
     }
 
     render() {
         const { logged } = this.context;
-        const { teacherName, teacher } = this.state;
-        
+        const { teacherName, teacher, selectedGrade, teacherPosts, teacherPostsKeys } = this.state;
+		const { displayName, photoURL, teacherData } = teacher;
+		
         return(
             <Fragment>
                 <Head>
@@ -105,22 +131,42 @@ export default class extends Component {
                         <Avatar 
                             hasContainer
                             displayName={teacherName}
+							photoURL={photoURL}
                         />
                     </div>
                 </div>
 
                 <div id="principal-section">
                     <div id="principal-section-header">
-                        <div id="teacher-subject">{teacher.teacherData ? teacher.teacherData.subject : "Cargando..."}</div>
+                        <div id="teacher-subject">{teacherData ? teacherData.subject : "Cargando..."}</div>
                         <div id="teacher-grades-buttons">
                             <GradesNavigationComponent />
                         </div>
                     </div>
 
                     <div id="teacher-posts-container">
-                        <Post />
-                        <Post />
-                        <Post />
+						{
+							teacherPosts.length === 0 
+							? 
+								<Loader center content="Cargando" />
+							:
+								<TheDivController>
+									{
+										teacherPosts.map((post, index) => 
+											<Post
+												key={teacherPostsKeys[index]}
+												author={teacherName}
+												authorImage={photoURL}
+												date={post.date}
+												postImage={post.postImage}
+												postColor={post.postColor}
+												title={post.title}
+												titleColor={post.titleColor}
+												description={post.description}
+											/>)
+									}
+								</TheDivController>
+						}
                     </div>
                 </div>
 
@@ -134,13 +180,13 @@ export default class extends Component {
 
                 <style jsx global>{`
                     #header-section {
-                        background: url(${teacher.teacherData ? teacher.teacherData.background : "/images/member/background.jpg"});
+                        background: url(${teacherData ? teacherData.background : "/images/member/background.jpg"});
                         background-size: cover;
                         background-repeat: no-repeat;
                     }
 
                     #header-section-overlay {
-                        background: linear-gradient(rgba(0, 0, 0, .4), #efc70585);
+                        background: linear-gradient(rgba(0, 0, 0, .4), rgba(0, 0, 0, .8));
                         padding: 2rem 0;                    
                         color: white;
                     }
@@ -150,9 +196,6 @@ export default class extends Component {
                         background: white;
                         border-radius: 1.4rem 1.4rem 0 0;
                         transform: translateY(-1rem);
-                    }
-
-                    #principal-section-header {
                     }
 
                     #principal-section-header #teacher-subject {
