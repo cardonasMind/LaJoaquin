@@ -93,6 +93,7 @@ class NewPostForm extends Component {
         ctx.drawImage(img, 0, 0, width, height);
 
         return canvas.toDataURL("image/png");
+
     }
 
 
@@ -100,16 +101,16 @@ class NewPostForm extends Component {
 
     handleChange = (value, e) => this.setState({ [e.target.name]: e.target.value });
 
-    handleCoverUpload = (e, file) => {
-       const reader = new FileReader();
+    handleCoverUpload = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
 
         // Set the image once loaded into file reader
-        reader.readAsDataURL(file.blobFile);
+        reader.readAsDataURL(file);
 
         reader.onload = e => {
             const resizedImage = this.resizeImage(e.target.result);
-
-            changeStateWithTheResizedImage(resizedImage)
+            changeStateWithTheResizedImage(resizedImage);
         }
 
         const changeStateWithTheResizedImage = resizedImage => 
@@ -220,14 +221,18 @@ class NewPostForm extends Component {
                 <div id="cover-type-container">
                     {this.state.cover === "image"
                     ? <div>
-                        <Uploader 
+                        <input
+                            type="file"
+                            onChange={this.handleCoverUpload}
+                        />
+                        {/*<Uploader 
                             listType="picture-text" 
                             draggable
                             action=""
                             onSuccess={this.handleCoverUpload}  
                         >
                             <h2>Selecciona una Imágen</h2>
-                        </Uploader>
+                        </Uploader>*/}
                     </div>
                     : <div id="color-cover">
                         <h2>Configurar color de fondo</h2>
