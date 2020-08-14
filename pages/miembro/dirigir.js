@@ -102,10 +102,10 @@ class NewPostForm extends Component {
     handleChange = (value, e) => this.setState({ [e.target.name]: e.target.value });
 
     handleCoverUpload = e => {
-        const file = e[0].blobFile
+        const file = e.blobFile
         const reader = new FileReader();
-
-        /*// Set the image once loaded into file reader
+        
+        // Set the image once loaded into file reader
         reader.readAsDataURL(file);
 
         reader.onload = e => {
@@ -114,9 +114,7 @@ class NewPostForm extends Component {
         }
 
         const changeStateWithTheResizedImage = resizedImage => 
-            this.setState({ postImage: resizedImage, postImageFile: resizedImage });*/
-
-            console.log(file)
+            this.setState({ postImage: resizedImage, postImageFile: resizedImage });
     }
 
     handleNewPost = () => {
@@ -227,7 +225,7 @@ class NewPostForm extends Component {
                             listType="picture-text" 
                             draggable
                             action=""
-                            onChange={this.handleCoverUpload}  
+                            onUpload={this.handleCoverUpload}  
                         >
                             <h2>Selecciona una Imágen</h2>
                         </Uploader>
