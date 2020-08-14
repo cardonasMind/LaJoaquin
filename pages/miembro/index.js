@@ -16,7 +16,7 @@ import Avatar from "../../src/components/craft/Avatar";
 
 import Navigation from "../../src/components/Navigation";
 
-const ModifyProfileForm = ({ displayName, photoURL }) => {
+const ModifyProfileForm = ({ displayName, photoURL, updateUserAcoountFromDB }) => {
     const [ memberNewPhoto, setMemberNewPhoto ] = useState(photoURL);
     const [ memberNewName, setMemberNewName ] = useState(displayName);
 
@@ -73,11 +73,7 @@ const ModifyProfileForm = ({ displayName, photoURL }) => {
      }
 
     const handleModifyProfile = () => {
-		const currentUser = firebase.auth().currentUser;
-		
-		currentUser.uid
-		
-        /*let newPhoto = false;
+	    let newPhoto = false;
         let newName = false;
 
         // Check if user has change something
@@ -109,6 +105,8 @@ const ModifyProfileForm = ({ displayName, photoURL }) => {
                             photoURL: memberNewPhoto
                         })
                         .then(() => {
+                            updateUserAcoountFromDB(memberNewName, memberNewPhoto);
+
                             Notification["success"]({
                                 title: "¡Perfecto!",
                                 description: "Todo correcto"
@@ -138,6 +136,8 @@ const ModifyProfileForm = ({ displayName, photoURL }) => {
                                     photoURL: downloadURL
                                 })
                                 .then(() => {
+                                    updateUserAcoountFromDB(memberNewName, downloadURL);
+
                                     Notification["success"]({
                                         title: "¡Perfecto!",
                                         description: "Todo correcto"
@@ -165,6 +165,8 @@ const ModifyProfileForm = ({ displayName, photoURL }) => {
                         displayName: memberNewName
                     })
                     .then(() => {
+                        updateUserAcoountFromDB(memberNewName, memberNewPhoto);
+
                         Notification["success"]({
                             title: "¡Perfecto!",
                             description: "Todo correcto"
@@ -188,7 +190,7 @@ const ModifyProfileForm = ({ displayName, photoURL }) => {
                 title: "Espera",
                 description: "No has modificado tu información aún."
             });
-        }*/
+        }
     }
 
     return(
@@ -269,9 +271,10 @@ const ModifyProfileForm = ({ displayName, photoURL }) => {
     )
 }
 
-const ModifyProfileButton = ({ showTheDiv, displayName, photoURL }) => {
+const ModifyProfileButton = ({ showTheDiv, displayName, photoURL, updateUserAcoountFromDB }) => {
     const handleModifyProfile = () => {
-        showTheDiv(<ModifyProfileForm displayName={displayName} photoURL={photoURL} />);
+        showTheDiv(<ModifyProfileForm displayName={displayName} photoURL={photoURL} 
+            updateUserAcoountFromDB={updateUserAcoountFromDB} />);
     }
 
     return(

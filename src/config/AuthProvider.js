@@ -112,10 +112,13 @@ export class AuthContextProvider extends Component {
         });
     }
 	
-	updateUserAcoountFromDB = uid => {
+	updateUserAcoountFromDB = (memberNewName, memberNewPhoto) => {
+        const db = firebase.firestore();
+        const uid = firebase.auth().currentUser.uid;
+
 		db.collection("users").doc(uid).update({
-			displayName: this.state.displayName,
-            photoURL: this.state.photoURL
+			displayName: memberNewName,
+            photoURL: memberNewPhoto
 		})
         .catch(error => {
 			Notification["error"]({
