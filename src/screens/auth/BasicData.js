@@ -378,59 +378,68 @@ export default class extends Component {
 
         return(
             <Fragment>
-                <div id="page-overlay">
-                    <img id="image-overlay" src="images/member/greek-background.jpg" />
+                <div id="image-overlay">
+                    <div id="page-overlay">
+                        <BackgroundMusicPlayer />
 
-                    <BackgroundMusicPlayer />
+                        {
+                            stage === 1 
+                            ?
+                                <FirstStage setSecondStage={this.setSecondStage} />
+                            :
+                                null
+                        }
 
-                    {
-                        stage === 1 
-                        ?
-                            <FirstStage setSecondStage={this.setSecondStage} />
-                        :
-                            null
-                    }
+                        {
+                            stage === 2
+                            ?
+                                <SecondStage setThirdStage={this.setThirdStage}/>
+                            :
+                                null
+                        }
 
-                    {
-                        stage === 2
-                        ?
-                            <SecondStage setThirdStage={this.setThirdStage}/>
-                        :
-                            null
-                    }
+                        {
+                            stage === 3
+                            ? 
+                                <ThirdStage setFourthStage={this.setFourthStage} />
+                            :
+                                null
+                        }
 
-                    {
-                        stage === 3
-                        ? 
-                            <ThirdStage setFourthStage={this.setFourthStage} />
-                        :
-                            null
-                    }
-
-                    { 
-                        stage === 4 
-                        ?
-                            this.sendUserToIndex()
-                        :
-                            null
-                    }
+                        { 
+                            stage === 4 
+                            ?
+                                this.sendUserToIndex()
+                            :
+                                null
+                        }
+                    </div>
                 </div>
                 
 
                 <style jsx global>{`
                     #page {
-                        background: linear-gradient(black, #6b5a00);
+                        padding-bottom: 0;
                     }
 
                     #image-overlay {
+                        background: url("images/member/greek-background.jpg");
+                        background-size: cover;
                         position: absolute;
                         top: 0;
                         right: 0;
                         bottom: 0;
                         left: 0;
-                        opacity: .2;
-                        height: 100%;
-                        width: 100%;
+                        height: 100vh;
+                    }
+                    
+                    #page-overlay {
+                        background: linear-gradient(rgba(0, 0, 0, .8), rgba(107, 90, 0, .6));
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
                     }
                 
                 `}</style>
