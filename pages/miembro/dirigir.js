@@ -222,9 +222,9 @@ class NewPostForm extends Component {
                     {this.state.cover === "image"
                     ? <div>
                         <Uploader 
-                            listType="picture-text" 
+                            listType="picture-text"
+                            action="" 
                             draggable
-                            action=""
                             onUpload={this.handleCoverUpload}  
                         >
                             <h2>Selecciona una Imágen</h2>

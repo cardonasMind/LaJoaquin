@@ -34,7 +34,7 @@ const SecondStage = ({ setThirdStage }) => {
     const [ memberName, setMemberName ] = useState("");
 
     /*            FUNCTION THAT RESIZES AN IMAGE :D             */
-    const ResizeImage = imageURL => {
+    const resizeImage = imageURL => {
         const img = document.createElement("img");
         
         img.src = imageURL;
@@ -67,21 +67,19 @@ const SecondStage = ({ setThirdStage }) => {
         return canvas.toDataURL("image/png");
     }
 
-    const handlePhotoUpload = (e, file) => {
+    const handlePhotoUpload = e => {
+        const file = e.blobFile
         const reader = new FileReader();
-
+        
         // Set the image once loaded into file reader
-        reader.readAsDataURL(file.blobFile);
+        reader.readAsDataURL(file);
 
-        reader.onload = function(e) {
-            const resizedImage = ResizeImage(e.target.result);
-
-            changeStateWithTheResizedImage(resizedImage)
+        reader.onload = e => {
+            const resizedImage = resizeImage(e.target.result);
+            changeStateWithTheResizedImage(resizedImage);
         }
 
-        const changeStateWithTheResizedImage = resizedImage => {
-            setPhotoImage(resizedImage);
-        }
+        const changeStateWithTheResizedImage = resizedImage => setPhotoImage(resizedImage)
     }
 
     const handleDefaultPhoto = () => setPhotoImage("/images/member/default.jpg");
@@ -188,7 +186,7 @@ const SecondStage = ({ setThirdStage }) => {
                                     listType="picture-text" 
                                     draggable
                                     action=""
-                                    onSuccess={handlePhotoUpload}  
+                                    onUpload={handlePhotoUpload}  
                                 >
                                     <h2>Selecciona una Imágen</h2>
                                 </Uploader>
