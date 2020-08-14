@@ -205,7 +205,7 @@ const ModifyProfileForm = ({ displayName, photoURL, updateUserAcoountFromDB }) =
                             listType="picture-text" 
                             draggable
                             action=""
-                            onUpload={handleNewPhotoUpload}  
+                            onUpload={handleNewPhotoUpload}
                         >
                             <h2>Selecciona una Imágen</h2>
                         </Uploader>
@@ -249,6 +249,11 @@ const ModifyProfileForm = ({ displayName, photoURL, updateUserAcoountFromDB }) =
                     display: grid;
                     grid-template-rows: auto auto auto;
                     grid-gap: .4rem;
+                }
+
+                #choose-photo-input {
+                    height: 3.6rem;
+                    overflow: hidden;
                 }
 
 

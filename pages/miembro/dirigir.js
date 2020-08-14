@@ -220,7 +220,7 @@ class NewPostForm extends Component {
 
                 <div id="cover-type-container">
                     {this.state.cover === "image"
-                    ? <div>
+                    ? <div id="cover-input">
                         <Uploader
                             listType="picture-text"
                             action="" 
@@ -339,6 +339,11 @@ class NewPostForm extends Component {
                         padding: 1rem .4rem;
                         background: #f0f0f0;
                         text-align: center;
+                    }
+
+                    #cover-input {
+                        height: 3.6rem;
+                        overflow: hidden;
                     }
 
                     #cover-type-container #color-cover #color-inclination {

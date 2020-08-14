@@ -270,6 +270,8 @@ const SecondStage = ({ setThirdStage }) => {
 
                 #choose-photo-buttons #choose-photo-input {
                     position: relative;
+                    height: 3.6rem;
+                    overflow: hidden;
                 }
 
                 #choose-photo-buttons #choose-photo-input input {
