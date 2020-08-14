@@ -221,7 +221,7 @@ class NewPostForm extends Component {
                 <div id="cover-type-container">
                     {this.state.cover === "image"
                     ? <div>
-                        <Uploader 
+                        <Uploader
                             listType="picture-text"
                             action="" 
                             draggable

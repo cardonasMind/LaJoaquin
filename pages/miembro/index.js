@@ -24,7 +24,7 @@ const ModifyProfileForm = ({ displayName, photoURL, updateUserAcoountFromDB }) =
 
     const handleChange = value => setMemberNewName(value);
 
-    const ResizeImage = imageURL => {
+    const resizeImage = imageURL => {
         const img = document.createElement("img");
         
         img.src = imageURL;
@@ -57,19 +57,19 @@ const ModifyProfileForm = ({ displayName, photoURL, updateUserAcoountFromDB }) =
         return canvas.toDataURL("image/png");
     }
 
-    const handleNewPhotoUpload = (e, file) => {
+    const handleNewPhotoUpload = e => {
+        const file = e.blobFile
         const reader = new FileReader();
- 
-         // Set the image once loaded into file reader
-         reader.readAsDataURL(file.blobFile);
- 
-         reader.onload = function(e) {
-             const resizedImage = ResizeImage(e.target.result);
- 
-             changeStateWithTheResizedImage(resizedImage)
-         }
- 
-         const changeStateWithTheResizedImage = resizedImage => setMemberNewPhoto(resizedImage);
+        
+        // Set the image once loaded into file reader
+        reader.readAsDataURL(file);
+
+        reader.onload = e => {
+            const resizedImage = resizeImage(e.target.result);
+            changeStateWithTheResizedImage(resizedImage);
+        }
+
+        const changeStateWithTheResizedImage = resizedImage => setMemberNewPhoto(resizedImage);
      }
 
     const handleModifyProfile = () => {
@@ -205,7 +205,7 @@ const ModifyProfileForm = ({ displayName, photoURL, updateUserAcoountFromDB }) =
                             listType="picture-text" 
                             draggable
                             action=""
-                            onSuccess={handleNewPhotoUpload}  
+                            onUpload={handleNewPhotoUpload}  
                         >
                             <h2>Selecciona una Imágen</h2>
                         </Uploader>
